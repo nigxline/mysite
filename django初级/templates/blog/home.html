@@ -1,0 +1,232 @@
+﻿<!--
+
+ @Name：不落阁整站模板源码
+ @Author：Absolutely
+ @Site：http://www.lyblogs.cn
+
+ -->
+{% load staticfiles %}
+{% load blog_tags %}
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; Charset=gb2312">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>欢迎来到我的个人网站</title>
+    <link rel="shortcut icon" href={% static 'images/Logo_40.png' %} type="image/x-icon">
+    <!--Layui-->
+    <link href={% static 'plug/layui/css/layui.css' %} rel="stylesheet" />
+    <!--font-awesome-->
+    <link href={% static 'plug/font-awesome/css/font-awesome.min.css' %} rel="stylesheet" />
+    <!--全局样式表-->
+    <link href={% static 'css/global.css' %} rel="stylesheet" />
+    <!-- 本页样式表 -->
+    <link href={% static 'css/home.css'%} rel="stylesheet" />
+</head>
+<body>
+    <!-- 导航 -->
+{% include 'navigation.html' %}
+    <!-- 主体（一般只改变这里的内容） -->
+    <div class="blog-body">
+        <!-- canvas -->
+        <canvas id="canvas-banner" style="background: #393D49;"></canvas>
+        <!--为了及时效果需要立即设置canvas宽高，否则就在home.js中设置-->
+        <script type="text/javascript">
+            var canvas = document.getElementById('canvas-banner');
+            canvas.width = window.document.body.clientWidth - 10;//减去滚动条的宽度
+            if (screen.width >= 992) {
+                canvas.height = window.innerHeight * 1 / 3;
+            } else {
+                canvas.height = window.innerHeight * 2 / 7;
+            }
+        </script>
+        <!-- 这个一般才是真正的主体内容 -->
+        <div class="blog-container">
+            <div class="blog-main">
+                <!-- 网站公告提示 -->
+                <div class="home-tips shadow">
+                    <i style="float:left;line-height:17px;" class="fa fa-volume-up"></i>
+                    <div class="home-tips-container">
+                        <span style="color: #009688">正在建设中！</span>
+                        <span style="color: red">如果你觉得网站做得还不错，来点个赞吧！<a href="http://fly.layui.com/case/2017/" target="_blank" style="color:#01AAED">点我前往</a></span>
+                        <span style="color: #009688">一个Python狂热粉的个人网站！</span>
+                    </div>
+                </div>
+<!--秋之语录-->
+            <div>
+                <h1 style="font-size: 16px; font-style: italic;">秋之语录</h1>
+                <hr>
+                {% get_word_qiu as word %}
+                {% if word %}
+                    &emsp;&emsp;&ensp;{{ word.content }}
+                {% else %}
+                    禾烁
+                {% endif %}
+                <br>
+                <div style="text-align: right; ">——{{ word.author }} &nbsp;{{ word.date }}</div>
+            </div>
+<!--main-->
+    <div class="blog-main-left">
+        {% for post in post_list %}
+            <div class="article shadow">
+                <div class="article-left">
+                    <img src={% static 'images/cover/201703181909057125.jpg' %} alt="{{ post.title }}" />
+                </div>
+            <div class="article-right">
+                <div class="article-title">
+                    <a href="detail.html">{{ post.title }}</a>
+                </div>
+                <div class="article-abstract">
+                    {{ post.abstract }}
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="article-footer">
+                <span><i class="fa fa-clock-o"></i>&nbsp;&nbsp;{{ post.created_time }}</span>
+                <span class="article-author"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ post.author }}y</span>
+                <span><i class="fa fa-tag"></i>&nbsp;&nbsp;<a href="#">{{ post.category }}</a></span>
+{#                <a href="{%  url 'blog:post_delete' %}?post_id={{ post.id }}">删除</a>#}
+{#                <a href="{%  url 'blog:post_edit' %}?post_id={{ post.id }}">编辑</a>#}
+                <span class="article-viewinfo"><i class="fa fa-eye"></i>&nbsp;{{ post.page_view }}</span>
+                <span class="article-viewinfo"><i class="fa fa-commenting"></i>&nbsp;4</span>
+            </div>
+    </div>
+        {% empty %}
+            暂无文章！
+        {% endfor %}
+<!-- 分页 -->
+        共 {{ page.paginator.num_pages }} 页/当前 {{ page.number }} 页
+            <br>
+        {% if page.has_previous %}
+            <a href="{% url 'blog:home' %}?page_num={{ page.previous_page_number }} ">上一页</a>
+        {% endif %}
+        {% for i in page.paginator.page_range %}
+            <a href="{% url 'blog:home' %}?page_num={{ i }}">{{ i }}</a>
+        {% endfor %}
+        {% if page.has_next %}
+            <a href="{% url 'blog:home' %}?page_num={{ page.next_page_number }}">下一页</a>
+        {% endif %}
+  </div>
+                <!--右边小栏目-->
+                <div class="blog-main-right">
+                    <div class="blogerinfo shadow">
+                        <div class="blogerinfo-figure">
+                            <img style="border-radius:45px;height: 90px;width: 90px;" src={% static 'images/head.jpg' %} alt="头像" />
+                        </div>
+                        <p class="blogerinfo-nickname">菽绣</p>
+                        <p class="blogerinfo-introduce">一位90后Python狂热粉</p>
+                        <p class="blogerinfo-location"><i class="fa fa-location-arrow"></i>&nbsp;四川 成都</p>
+                        <hr />
+                        <div class="blogerinfo-contact">
+                            <a target="_blank" title="QQ交流" href="javascript:layer.msg('启动QQ会话窗口')"><i class="fa fa-qq fa-2x"></i></a>
+                            <a target="_blank" title="给我写信" href="javascript:layer.msg('启动邮我窗口')"><i class="fa fa-envelope fa-2x"></i></a>
+                            <a target="_blank" title="新浪微博" href="javascript:layer.msg('转到你的微博主页')"><i class="fa fa-weibo fa-2x"></i></a>
+                            <a target="_blank" title="码云" href="javascript:layer.msg('转到你的github主页')"><i class="fa fa-git fa-2x"></i></a>
+                        </div>
+                    </div>
+                    <div></div><!--占位-->
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">热文排行</div>
+                        <ul class="fa-ul blog-module-ul">
+                            {% for  hot_post in hot_post_list %}
+                                <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">{{ hot_post.title }}</a></li>
+                            {% empty %}
+                                暂无文章！
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">最近分享</div>
+                        <ul class="fa-ul blog-module-ul">
+                            {% for recent_post in recent_post_list %}
+                                <li><i class="fa-li fa fa-hand-o-right"></i><a href="http://pan.baidu.com/s/1c1BJ6Qc" target="_blank">{{ recent_post.title }}</a></li>
+                            {% empty %}
+                                暂无文章！
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">一路走来</div>
+                        <dl class="footprint">
+                            <dt>2018年012月16日</dt>
+                            <dd>网站上线</dd>
+                        </dl>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">后台记录</div>
+                        <dl class="footprint">
+                            {% for bgrecord in bgrecord_list %}
+                                <dt>{{ bgrecord.created_time }}</dt>
+                                <dd>{{ bgrecord.content }}</dd>
+                            {% empty %}
+                                暂无记录！
+                            {% endfor %}
+
+                        </dl>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">友情链接</div>
+                        <ul class="blogroll">
+                            {% for blogroll in blogroll_list %}
+                                <li><a target="_blank" href="http://www.layui.com/" title="Layui">{{ blogroll.friend }}</a></li>
+                                <li><a target="_blank" href="http://www.pagemark.cn/" title="页签">{{ blogroll.link }}</a></li>
+                            {% empty %}
+                                暂无链接！
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="blog-footer">
+        <p><span>Copyright</span><span>&copy;</span><span>2017</span><a href="http://www.lyblogs.cn">不落阁</a><span>Design By LY</span></p>
+        <p><a href="http://www.miibeian.gov.cn/" target="_blank">蜀ICP备16029915号-1</a></p>
+    </footer>
+    <!--侧边导航-->
+    <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
+        <li class="layui-nav-item layui-this">
+            <a href="home.html"><i class="fa fa-home fa-fw"></i>&nbsp;网站首页</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="article.html"><i class="fa fa-file-text fa-fw"></i>&nbsp;文章专栏</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="resource.html"><i class="fa fa-tags fa-fw"></i>&nbsp;资源分享</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="timeline.html"><i class="fa fa-road fa-fw"></i>&nbsp;点点滴滴</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="about.html"><i class="fa fa-info fa-fw"></i>&nbsp;关于本站</a>
+        </li>
+    </ul>
+    <!--分享窗体-->
+    <div class="blog-share layui-hide">
+        <div class="blog-share-body">
+            <div style="width: 200px;height:100%;">
+                <div class="bdsharebuttonbox">
+                    <a class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+                    <a class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+                    <a class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+                    <a class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--遮罩-->
+    <div class="blog-mask animated layui-hide"></div>
+    <!-- layui.js -->
+    <script src={% static "plug/layui/layui.js" %}></script>
+    <!-- 全局脚本 -->
+    <script src={% static "js/global.js" %}></script>
+    <!-- 本页脚本 -->
+    <script src={% static "/js/home.js" %}></script>
+</body>
+</html>
